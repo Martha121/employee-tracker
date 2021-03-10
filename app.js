@@ -28,16 +28,20 @@ function Prompt(){
         }])
         .then(({options}) => {
             if(options == 'View all departments'){
-                // Call function to handle this All departments option
+                // Call function to handle All departments option
                 viewAllDepartments();
             } else
             if (options == 'View all roles'){
-                //Call function to handle this View all roles option
+                //Call function to handle View all roles option
                 viewAllRoles();
             } else
             if(options == 'View all employees'){
-                //Call function to handle this View all roles View all employees option
+                //Call function to handle View all employees option
                 wiewAllEmployees();
+            } else
+            if (options == 'Add a department'){
+               //Call function to handle Add a department option 
+               addDepartment();
             }
         });
 }
@@ -46,13 +50,10 @@ function viewAllDepartments(){
     // Use query to bring the list of all departments
     connection.query("SELECT * FROM department",
     function(err, results, fields) {
-        var arrToDisplay = [];
-        //console.log(results);
-        for(var i=0; i<results.length; i++){
-            arrToDisplay.push(results[i].name);
-        }
-        console.table(results); // results contains rows returned by server
-        //console.log(fields); // fields contains extra meta data about results, if available
+        if (err) throw err
+        console.table(results) 
+        Prompt()
+
       });
 }
 
@@ -60,8 +61,9 @@ function viewAllRoles(){
     // Use query to bring the list of all departments
     connection.query("SELECT role.title, role.id, department.name, role.salary FROM role INNER JOIN department ON role.department_id = department.id",
     function(err, results, fields){
-    
-        console.table(results); 
+    if (err) throw err
+    console.table(results)
+    Prompt() 
 
     }); 
 }
@@ -74,9 +76,32 @@ function wiewAllEmployees(){
         "LEFT JOIN department ON role.department_id=department.id";
     connection.query(strQuery,
     function(err, results, fields){
-        console.table(results);
+        if (err) throw err
+        console.table(results)
+        Prompt()
+
 
     });
 }
+function addDepartment(){
+    return inquirer
+    .prompt([
+        {
+          name: "name",
+          type: "input",
+          message: "What Department would you like to add?"
+        }
+    ]).then(function (res) {
+        console.log (res);
+     connection.query("INSERT INTO department SET name=res",
+               function(err) {
+                if (err) throw err
+                console.table(res)
+                Prompt();
+            }
+        )
+    })
+  }
+
 
 Prompt();
