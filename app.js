@@ -42,7 +42,15 @@ function Prompt(){
             if (options == 'Add a department'){
                //Call function to handle Add a department option 
                addDepartment();
+            } else
+            if (options == 'Add a role'){
+               //Call function to handle Add a department option 
+               addRole();
             }
+            if (options == 'Add an employee'){
+                //Call function to handle Add a department option 
+                addEmployee();
+             }
         });
 }
 
@@ -92,16 +100,86 @@ function addDepartment(){
           message: "What Department would you like to add?"
         }
     ]).then(function (res) {
-        console.log (res);
-     connection.query("INSERT INTO department SET name=res",
-               function(err) {
+        var strQuery = "INSERT INTO department (name) value ('" + res.name + "');"
+        connection.query(strQuery,
+               function(err, results, fields) {
                 if (err) throw err
-                console.table(res)
+                console.table(results)
                 Prompt();
             }
         )
     })
   }
+
+  function addRole(){
+    return inquirer
+    .prompt([
+        {
+          name: "title",
+          type: "input",
+          message: "What is the title you want to add?"
+        },
+        {
+            name: "salary",
+            type: "input",
+            message: "What is the salary?"
+          },
+          {
+            name: "department_id",
+            type: "input",
+            message: "What is the department id?"
+          }
+    ]).then(function (res) {
+        console.log (res);
+        var sql = "INSERT INTO role (title,salary, department_id) " + 
+            "value ('" + res.title + "' , " +
+            res.salary + "," + res.department_id + ")";
+        console.log(sql);
+     connection.query(sql,
+               function(err, results, fields) {
+                if (err) throw err
+                /*console.table(results)*/
+                viewAllRoles()
+                Prompt();
+            }
+        )
+    })
+}
+function addEmployee(){
+    return inquirer
+    .prompt([
+        {
+          name: "title",
+          type: "input",
+          message: "What is the title you want to add?"
+        },
+        {
+            name: "salary",
+            type: "input",
+            message: "What is the salary?"
+          },
+          {
+            name: "department_id",
+            type: "input",
+            message: "What is the department id?"
+          }
+    ]).then(function (res) {
+        console.log (res);
+        var sql = "INSERT INTO role (title,salary, department_id) " + 
+            "value ('" + res.title + "' , " +
+            res.salary + "," + res.department_id + ")";
+        console.log(sql);
+     connection.query(sql,
+               function(err, results, fields) {
+                if (err) throw err
+                /*console.table(results)*/
+                viewAllRoles()
+                Prompt();
+            }
+        )
+    })
+}
+  
 
 
 Prompt();
