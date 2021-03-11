@@ -4,17 +4,17 @@ DROP TABLE IF EXISTS department;
 
 CREATE TABLE department (
   id INTEGER NOT NULL AUTO_INCREMENT,
-  department_name VARCHAR(30) NOT NULL,
+  name VARCHAR(30) NOT NULL,
   PRIMARY KEY (id)
 );
 
 CREATE TABLE role (
   id INTEGER NOT NULL AUTO_INCREMENT,
   title VARCHAR(30) NOT NULL,
-  salary decimal NOT NULL,  1
-  department_id INTEGER,
+  salary decimal NOT NULL,  
+  department_id INTEGER NOT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE SET NULL
+  CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id) /*ON DELETE SET NULL*/
 );
 
 CREATE TABLE employee (
@@ -25,7 +25,7 @@ CREATE TABLE employee (
   manager_id integer,
   PRIMARY KEY (id),
   CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE SET NULL,
-  CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
+  CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employee(id) /*ON DELETE SET NULL*/
 );
 
 

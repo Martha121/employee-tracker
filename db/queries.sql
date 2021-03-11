@@ -13,7 +13,7 @@ THEN I am presented with the job title, role id, the department that role belong
 /*WHEN I choose to view all employees
 THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to*/
 
-SELECT e.id, e.first_name, e.last_name, role.title AS job_title, department.name AS departmentes, role.salary AS salaries, Concat(m.first_name,' ', m.last_name) AS manager
+SELECT e.id, e.first_name, e.last_name, role.title AS job_title, department.name AS departments, role.salary AS salaries, Concat(m.first_name,' ', m.last_name) AS manager
 FROM employee e
 LEFT JOIN employee m ON e.manager_id = m.id
 LEFT JOIN role ON e.role_id=role.id
@@ -30,6 +30,8 @@ THEN I am prompted to enter the name, salary, and department for the role and th
 
 INSERT INTO role (title,salary, department_id)
 value (?,?,?);
+/*INSERT INTO role (title,salary, department_id)
+value ("SUPER TITLE", 77500,(SELECT id FROM department WHERE name="Sales" ));*/
 
 /*WHEN I choose to add an employee
 THEN I am prompted to enter the employee’s first name, last name, role, and manager and that employee is added to the database*/
