@@ -12,7 +12,7 @@
     - GitHub - Hosts repository that can be deployed to GitHub Pages
   
   ## Demo
-   Link to the video: https://youtu.be/HCjs5KrxgvE
+   Link to the video: https://www.youtube.com/watch?v=0zMFGOy41KE
 
   ## Contributing
      Martha Gamez.

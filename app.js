@@ -1,10 +1,7 @@
 const inquirer = require("inquirer");
+
 //get the client
 const mysql = require("mysql2");
-//const mysql = require('mysql2/promise');
-const {
-  connectableObservableDescriptor,
-} = require("rxjs/internal/observable/ConnectableObservable");
 
 //create the connection to database
 const connection = mysql.createConnection({
@@ -14,6 +11,7 @@ const connection = mysql.createConnection({
   database: "business_tracker",
 });
 
+// Start 
 function Prompt() {
   return inquirer
     .prompt([
@@ -48,13 +46,10 @@ function Prompt() {
       } else if (options == "Add a role") {
         //Call function to handle Add a department option
         addRole();
-      }
-
-      if (options == "Add an employee") {
+      }else if (options == "Add an employee") {
         //Call function to handle Add a department option
         addEmployee();
-      }
-      if (options == "Update an employee role") {
+      }else if (options == "Update an employee role") {
         //Call function to handle Add a department option
         updateEmployeeRole();
       }
@@ -69,13 +64,7 @@ function viewAllDepartments() {
     console.table(results);
     Prompt();
   });
-  /*
-  connection.query("SELECT * FROM department", function (err, results, fields) {
-    if (err) throw err;
-    console.table(results);
-    Prompt();
-  });
-  */
+  
 }
 
 function viewAllRoles() {
@@ -92,6 +81,7 @@ function viewAllRoles() {
 }
 
 function wiewAllEmployees() {
+    // Query to view employees 
   var strQuery =
     "SELECT e.id, e.first_name, e.last_name, role.title AS job_title, department.name AS departmentes, role.salary AS salaries, Concat(m.first_name,' ', m.last_name) AS manager " +
     "FROM employee e " +
@@ -104,6 +94,7 @@ function wiewAllEmployees() {
     Prompt();
   });
 }
+// query to add a department
 function addDepartment() {
   return inquirer
     .prompt([
@@ -123,6 +114,7 @@ function addDepartment() {
     });
 }
 
+// Query to add a new role
 function addRole() {
   var arrChoices = getDepartmentsList();
   return inquirer
@@ -152,9 +144,7 @@ function addRole() {
       connection.query(sql, function (err, results, fields) {
         if (err) {
           throw err;
-          //res.status(400).json({ error: err.message });
-          //console.log("Unable to add new role. Please check your information");
-        } else {
+          } else {
           console.log("The new role has been added.");
         }
 
@@ -163,10 +153,10 @@ function addRole() {
     });
 }
 
+// Query to add a new employee
 function addEmployee() {
   var arrChoices = getRolesList();
   var arrManager = getManagerList();
-  console.log(arrManager);
   return inquirer
     .prompt([
       {
@@ -195,11 +185,10 @@ function addEmployee() {
     .then(function (res) {
       // First get the id of the manager
       var sql = `SELECT id FROM employee WHERE first_name='${res.manager}'`;
-      var idManager = 0;
+      
       connection.query(sql, function (err, results) {
         if (err) throw err;
-        console.log(results);
-        console.log(results[0]);
+        
         // Here insert al the data for the employee table, including the manager id.
         sql = `INSERT INTO employee (first_name,last_name,role_id,manager_id) 
                 values ('${res.first_name}','${res.last_name}',
@@ -214,6 +203,7 @@ function addEmployee() {
     });
 }
 
+//
 function updateEmployeeRole() {
   var arrChoices = getRolesList();
   return inquirer
@@ -243,19 +233,17 @@ function updateEmployeeRole() {
                 AND last_name='${res.last_name}'`;
       connection.query(sql, function (err, results) {
         if (err) throw err;
-        console.log(">>> Employee Id: ");
         glbEmpId = results[0].id;
-        console.log(glbEmpId);
+        
         // >>>> Query 2: Get the role ID
         sql = `SELECT id FROM role WHERE title = '${res.role}'`;
-        console.log(sql);
+        
         connection.query(sql, function (err, result) {
           if (err) throw err;
-          console.log(">>> Role Id: ");
-          console.log(result);
+          
           // >>>> Query 3: Update the employee record
           sql = `UPDATE employee SET role_id = ${result[0].id} WHERE id=${glbEmpId}`;
-          console.log(sql);
+          
           connection.query(sql, function (err, result) {
             if (err) throw err;
             console.log(">>> Employee role has been updated");
